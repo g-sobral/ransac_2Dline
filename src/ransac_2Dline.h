@@ -5,7 +5,7 @@
 #include <time.h>
 
 
-void ransac_2Dline(float *data, int n, int maxT, float threshold,
+void ransac_2Dline(float *data, int n, int nd, int maxT, float threshold,
 					float *bestModel, int *bestInliers, int verbose);
 
 int randomSelect(float *sel, int nsel, float *data, int *ndata, int N);

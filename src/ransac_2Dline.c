@@ -1,6 +1,6 @@
 #include "ransac_2Dline.h"
 
-void ransac_2Dline(float *data, int n, int maxT, float threshold,
+void ransac_2Dline(float *data, int n, int nd, int maxT, float threshold,
 					float *bestModel, int *bestInliers, int verbose) {
 
 	if(verbose)
@@ -9,7 +9,7 @@ void ransac_2Dline(float *data, int n, int maxT, float threshold,
 	*bestInliers = 0;
 
 	int T = 1;
-	int ndata = n;
+	int ndata = nd;
 	int	inliers = 0;
 	int Tcount = 0;
 
@@ -22,8 +22,12 @@ void ransac_2Dline(float *data, int n, int maxT, float threshold,
 	float p = 0.99;
 
 	// create a copy of the data array
-	float *dataCpy = malloc(2*n*sizeof(float));
-	memcpy(dataCpy, data, 2*n*sizeof(float));
+	float dataCpy[2*nd];
+	for(int i=0; i<nd; i++)
+	{
+		dataCpy[i] = data[i];
+		dataCpy[nd+i] = data[n+i];
+	}
 
 	srand(time(NULL)); // set rand seed
 
@@ -33,7 +37,7 @@ void ransac_2Dline(float *data, int n, int maxT, float threshold,
 			printf("\n#%d ITERATION >>>>>>>>>>>>>>>>>>>>>>>\n", Tcount);
 
 		// Select 2 points at random to form a trial model
-		if(randomSelect(maybeInliers, 2, dataCpy, &ndata, n)==-1)
+		if(randomSelect(maybeInliers, 2, dataCpy, &ndata, nd)==-1)
 			break;
 
 		if(verbose)
@@ -54,7 +58,7 @@ void ransac_2Dline(float *data, int n, int maxT, float threshold,
 		// Evaluate distances between points and model.
 		// Given a threshold, create a consensus set with the points
 		// that are inliers.
-		for(int i=0; i<n; i++)
+		for(int i=0; i<nd; i++)
 		{
 			point[0] = data[i];
 			point[1] = data[n+i];
@@ -80,7 +84,7 @@ void ransac_2Dline(float *data, int n, int maxT, float threshold,
 
 			// Reestimate T, the number of trials to ensure we pick,
 			// with probability p, a data set free of outliers.
-			fracInliers = (float)inliers/n;
+			fracInliers = (float)inliers/nd;
 			pNoOutliers = 1 - pow(fracInliers, 2);
 			T = log(1-p)/log(pNoOutliers);
 		}

@@ -56,7 +56,7 @@ int main(int argc, char **argv) {
 	// start timer
     gettimeofday(&t1, NULL);
 
-	ransac_2Dline(data, N, 149, 0.3, bestModel, &bestInliers, 1);
+	ransac_2Dline(data, N, N, 149, 0.3, bestModel, &bestInliers, 1);
 
 	// stop timer
     gettimeofday(&t2, NULL);

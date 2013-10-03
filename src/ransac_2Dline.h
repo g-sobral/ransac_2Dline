@@ -4,12 +4,11 @@
 #include <math.h>
 #include <time.h>
 
+int ransac_2Dline(double **data, int n, int maxT, double threshold,
+					double *bestModel, int *bestInliers, int verbose);
 
-void ransac_2Dline(float *data, int n, int nd, int maxT, float threshold,
-					float *bestModel, int *bestInliers, int verbose);
+int randomSelect(double **sel, int nsel, double **data, int *ndata);
 
-int randomSelect(float *sel, int nsel, float *data, int *ndata, int N);
+int fitModel_line(double *point, double *l, double threshold);
 
-int fitModel_line(float *point, float *model, float threshold);
-
-void estimateModel_line(float *model, float *dataset, int n, int inliers);
+void estimateModel_line(double *l, double **P, int n);
